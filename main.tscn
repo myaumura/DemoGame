@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://v3mbc6hv7c58"]
+[gd_scene load_steps=11 format=3 uid="uid://v3mbc6hv7c58"]
 
 [ext_resource type="PackedScene" uid="uid://dygr1xb4ebflm" path="res://player.tscn" id="1_7w3g0"]
 [ext_resource type="Script" path="res://main.gd" id="1_ap55k"]
 [ext_resource type="PackedScene" uid="uid://cpyflcpj0jwue" path="res://mob.tscn" id="2_725ue"]
 [ext_resource type="FontFile" uid="uid://d3ffbma3bxx1v" path="res://fonts/Xolonium-Regular.ttf" id="4_l1tnk"]
 [ext_resource type="Script" path="res://hud.gd" id="4_uqnvd"]
+[ext_resource type="AudioStream" uid="uid://cejm4bb70fa3g" path="res://art/House In a Forest Loop.ogg" id="6_l8iib"]
+[ext_resource type="AudioStream" uid="uid://bm88fi1s5v1di" path="res://art/gameover.wav" id="7_y14ey"]
 
 [sub_resource type="Curve2D" id="Curve2D_jnaat"]
 _data = {
@@ -12,9 +14,23 @@ _data = {
 }
 point_count = 5
 
+[sub_resource type="InputEventAction" id="InputEventAction_klmt7"]
+action = &"start_game"
+
+[sub_resource type="Shortcut" id="Shortcut_a2wqd"]
+events = [SubResource("InputEventAction_klmt7")]
+
 [node name="Main" type="Node"]
 script = ExtResource("1_ap55k")
 mob_scene = ExtResource("2_725ue")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0823529, 0.266667, 0.298039, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_7w3g0")]
 
@@ -82,12 +98,20 @@ grow_vertical = 2
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("4_l1tnk")
 theme_override_font_sizes/font_size = 64
+shortcut = SubResource("Shortcut_a2wqd")
 text = "Start
 "
 
 [node name="MessageTimer" type="Timer" parent="HUD"]
 wait_time = 2.0
 one_shot = true
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_l8iib")
+parameters/looping = false
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_y14ey")
 
 [connection signal="hit" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
